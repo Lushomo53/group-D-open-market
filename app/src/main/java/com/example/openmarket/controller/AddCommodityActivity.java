@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.openmarket.R;
-import com.example.openmarket.fdata.FakeRepo;
+import com.example.openmarket.db.Repository;
 import com.example.openmarket.model.Commodity;
 import com.example.openmarket.model.PriceRecord;
 import com.example.openmarket.utility.Unit;
@@ -156,15 +156,15 @@ public class AddCommodityActivity extends AppCompatActivity {
         if (existingCommodity != null) {
             // Add price to existing commodity
             PriceRecord priceRecord = new PriceRecord(existingCommodity, price, selectedDate);
-            FakeRepo.addPrice(priceRecord);
+            Repository.addPrice(this, priceRecord);
             Toast.makeText(this, "Price added to existing commodity", Toast.LENGTH_SHORT).show();
         } else {
             // Create new commodity and add price
             Commodity newCommodity = new Commodity(commodityName, unit);
-            FakeRepo.addCommodity(newCommodity);
+            Repository.addCommodity(this, newCommodity);
 
             PriceRecord priceRecord = new PriceRecord(newCommodity, price, selectedDate);
-            FakeRepo.addPrice(priceRecord);
+            Repository.addPrice(this,priceRecord);
             Toast.makeText(this, "New commodity added successfully", Toast.LENGTH_SHORT).show();
         }
 
@@ -176,7 +176,7 @@ public class AddCommodityActivity extends AppCompatActivity {
     }
 
     private Commodity findCommodityByName(String name) {
-        for (Commodity commodity : FakeRepo.getCommodities()) {
+        for (Commodity commodity : Repository.getCommodities(this)) {
             if (commodity.getName().equalsIgnoreCase(name)) {
                 return commodity;
             }

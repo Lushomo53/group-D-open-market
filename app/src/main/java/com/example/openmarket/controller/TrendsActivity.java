@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,11 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.openmarket.R;
-import com.example.openmarket.fdata.FakeRepo;
+import com.example.openmarket.db.Repository;
 import com.example.openmarket.model.Commodity;
-import com.example.openmarket.model.CommodityPrice;
 import com.example.openmarket.model.PriceRecord;
-import com.example.openmarket.utility.DataUtils;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -34,19 +31,13 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class TrendsActivity extends AppCompatActivity {
@@ -101,7 +92,7 @@ public class TrendsActivity extends AppCompatActivity {
     //this set up the dropdown using auto complete textview
 
     private void setupSpinner() {
-        List<Commodity> commodities = FakeRepo.getCommodities();
+        List<Commodity> commodities = Repository.getCommodities(this);
         List<String> commodityName = commodities.stream()
                 .map(Commodity::getName)
                 .collect(Collectors.toList());
@@ -209,7 +200,7 @@ public class TrendsActivity extends AppCompatActivity {
         //A short delay
         priceTrendChart.postDelayed(() -> {
             commodityName.setText(commodity.getName());
-            List<PriceRecord> prices = FakeRepo.getPricesForCommodity(commodity);
+            List<PriceRecord> prices = Repository.getPricesForCommodity(this, commodity);
 
             if(prices.isEmpty()) {
                 showEmptySate();

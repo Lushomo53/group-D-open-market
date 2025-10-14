@@ -3,7 +3,7 @@ package com.example.openmarket.controller;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.openmarket.CommodityAdapter;
 import com.example.openmarket.R;
-import com.example.openmarket.fdata.FakeRepo;
+import com.example.openmarket.db.Repository;
 import com.example.openmarket.model.Commodity;
 import com.example.openmarket.model.PriceRecord;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,6 +33,7 @@ public class CommodityListActivity extends AppCompatActivity {
     ImageButton trends;
 
 
+    View trendsScreen;
 
 
     @SuppressLint("MissingInflatedId")
@@ -50,12 +51,17 @@ public class CommodityListActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        trends = findViewById(R.id.trendsBtn);
-        trends.setOnClickListener(v -> {
+        trendsScreen = findViewById(R.id.trendsBtn);
+        trendsScreen.setOnClickListener(v -> {
             Intent intent = new Intent(CommodityListActivity.this, TrendsActivity.class);
             startActivity(intent);
         });
 
+        trendsScreen = findViewById(R.id.trendBtn);
+        trendsScreen.setOnClickListener(v -> {
+            Intent intent = new Intent(CommodityListActivity.this, TrendsActivity.class);
+            startActivity(intent);
+        });
 
         loadCommodities();
     }
@@ -70,10 +76,10 @@ public class CommodityListActivity extends AppCompatActivity {
     private void loadCommodities() {
         // Load data from FakeRepo
         displayDataList = new ArrayList<>();
-        List<Commodity> commodities = FakeRepo.getCommodities();
+        List<Commodity> commodities = Repository.getCommodities(this);
 
         for (Commodity commodity : commodities) {
-            List<PriceRecord> priceHistory = FakeRepo.getPricesForCommodity(commodity);
+            List<PriceRecord> priceHistory = Repository.getPricesForCommodity(this, commodity);
 
             if (!priceHistory.isEmpty()) {
                 // Sort by date to get latest and previous prices

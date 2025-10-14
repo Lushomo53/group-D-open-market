@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.openmarket.model.Commodity;
 import com.example.openmarket.R;
-import com.example.openmarket.fdata.FakeRepo;
+import com.example.openmarket.db.Repository;
 import com.example.openmarket.utility.Unit;
 
 
@@ -76,9 +76,11 @@ public class AddPriceActivity extends AppCompatActivity {
     }
 
     private void setupSpinnerCommodity() {
-        List<Commodity> commodities = FakeRepo.getCommodities();
+        List<Commodity> commodities = Repository.getCommodities(this);
         //represents no commodity selected
-        commodities.add(0, new Commodity("Select Commodity", Unit.DEFAULT));
+        if (commodities.get(0).getUnit() != Unit.DEFAULT) {
+            commodities.add(0, new Commodity("Select Commodity", Unit.DEFAULT));
+        }
 
         ArrayAdapter<Commodity> adapter = getCommodityArrayAdapter(commodities, this);
 
@@ -159,7 +161,7 @@ public class AddPriceActivity extends AppCompatActivity {
 
             PriceRecord priceRecord = new PriceRecord(commodity, price, date);
 
-            FakeRepo.addPrice(priceRecord);
+            Repository.addPrice(this, priceRecord);
 
             //reset input fields
             editPrice.setText("");

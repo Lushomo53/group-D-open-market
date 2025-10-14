@@ -1,17 +1,19 @@
 package com.example.openmarket.utility;
 
+import android.content.Context;
+
 import java.time.LocalDate;
 import com.example.openmarket.model.Commodity;
 import com.example.openmarket.model.PriceRecord;
-import com.example.openmarket.fdata.FakeRepo;
+import com.example.openmarket.db.Repository;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class PRUtil {
     private static final int MAX = 0;
     private static final int MIN = 1;
-    private static PriceRecord getCurrentPrice(Commodity commodity) {
-        List<PriceRecord> priceRecords = FakeRepo.getPricesForCommodity(commodity);
+    private static PriceRecord getCurrentPrice(Context context, Commodity commodity) {
+        List<PriceRecord> priceRecords = Repository.getPricesForCommodity(context, commodity);
         PriceRecord currentPrice = null;
         LocalDate latestDate = priceRecords.get(0).getLastUpdated();
 
@@ -25,9 +27,9 @@ public class PRUtil {
         return currentPrice;
     }
 
-    private static List<Double> getExtremes(Commodity commodity) {
+    private static List<Double> getExtremes(Context context, Commodity commodity) {
         double max, min;
-        List<PriceRecord> priceRecords = FakeRepo.getPricesForCommodity(commodity);
+        List<PriceRecord> priceRecords = Repository.getPricesForCommodity(context, commodity);
 
         max = priceRecords.get(0).getPrice();
         min = priceRecords.get(0).getPrice();
@@ -43,16 +45,16 @@ public class PRUtil {
         return Arrays.asList(max, min);
     }
     
-    private static List<PriceRecord> getPricesSortedByDate(Commodity commodity) {
-        List<PriceRecord> priceRecords = FakeRepo.getPricesForCommodity(commodity);
+    private static List<PriceRecord> getPricesSortedByDate(Context context, Commodity commodity) {
+        List<PriceRecord> priceRecords = Repository.getPricesForCommodity(context, commodity);
 
         return priceRecords.stream()
                 .sorted((a, b) -> a.getLastUpdated().compareTo(b.getLastUpdated()))
                 .collect(Collectors.toList());
     }
 
-    private static double getRecentPriceChange(Commodity commodity) {
-        List<PriceRecord> priceRecords = getPricesSortedByDate(commodity);
+    private static double getRecentPriceChange(Context context, Commodity commodity) {
+        List<PriceRecord> priceRecords = getPricesSortedByDate(context, commodity);
 
         double current = priceRecords.get(0).getPrice();
         double previous = priceRecords.get(1).getPrice();

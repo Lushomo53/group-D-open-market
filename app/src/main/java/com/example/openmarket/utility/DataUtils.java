@@ -1,9 +1,6 @@
 package com.example.openmarket.utility;
 
-import com.example.openmarket.fdata.FakeRepo;
-import com.example.openmarket.model.Commodity;
 import com.example.openmarket.model.CommodityPrice;
-import com.example.openmarket.model.PriceRecord;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.openmarket.utility.Unit;
 public class Commodity {
+    private int id;
     private final String name;
     private final Unit unit;
 
@@ -12,9 +13,13 @@ public class Commodity {
         this.unit = unit;
     }
 
+    public int getId() { return id; }
+
     public String getName() { return name; }
 
     public Unit getUnit() { return unit; }
+    
+    public void setId(int id) { this.id = id; }
 
     @NonNull
     @Override

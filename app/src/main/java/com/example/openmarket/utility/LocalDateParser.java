@@ -7,7 +7,10 @@ public class LocalDateParser {
         String[] formats = {
                 "dd-MM-yyyy",
                 "dd/MM/yyyy",
-                "dd.MM.yyyy"
+                "dd.MM.yyyy",
+                "yyyy/MM/dd",
+                "yyyy.MM.dd",
+                "yyyy-MM-dd"
         };
 
         for (String format : formats) {
@@ -18,5 +21,9 @@ public class LocalDateParser {
         }
 
         return null;
+    }
+
+    public static String toTimestamp(LocalDate date) {
+        return date == null ? null : date.toString();
     }
 }
