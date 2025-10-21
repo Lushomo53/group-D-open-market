@@ -69,6 +69,14 @@ public class Repository {
         getInstance(context).addCommodityInternal(commodity);
     }
 
+    public static boolean deleteCommodity(Context context, Commodity commodity) {
+        return getInstance(context).deleteCommodityInternal(commodity.getId());
+    }
+
+    public static void deletePrice(Context context, Commodity commodity, String dateText) {
+        getInstance(context).deletePriceInternal(commodity.getId(), dateText);
+    }
+
     private void addCommodityInternal(Commodity commodity) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -153,6 +161,30 @@ public class Repository {
         return prices;
     }
 
+    private boolean deletePriceInternal(int commodityId, String dateText) {
+        LocalDate date = LocalDateParser.parseDate(dateText);
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        assert date != null;
+        int result = db.delete(
+                "price_records",
+                "commodity_id =  ? AND date = ?",
+                new String[] {String.valueOf(commodityId), date.toString()}
+        );
+        return result > 0;
+    }
+
+    private boolean deleteCommodityInternal(int commodityId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        int result = db.delete(
+                "commodities",
+                "id = ?",
+                new String[] {String.valueOf(commodityId)}
+        );
+        return result > 0;
+    }
+
     private boolean isCommoditiesEmpty() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM commodities", null);
@@ -164,4 +196,6 @@ public class Repository {
         cursor.close();
         return isEmpty;
     }
+
+
 }
