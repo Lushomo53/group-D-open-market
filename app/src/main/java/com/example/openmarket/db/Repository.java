@@ -70,7 +70,7 @@ public class Repository {
     }
 
     public static boolean deleteCommodity(Context context, Commodity commodity) {
-        return getInstance(context).deleteCommodityInternal(commodity.getId());
+        return getInstance(context).deleteCommodityInternal(commodity);
     }
 
     public static void deletePrice(Context context, Commodity commodity, String dateText) {
@@ -174,14 +174,20 @@ public class Repository {
         return result > 0;
     }
 
-    private boolean deleteCommodityInternal(int commodityId) {
+    private boolean deleteCommodityInternal(Commodity commodity) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         int result = db.delete(
                 "commodities",
                 "id = ?",
-                new String[] {String.valueOf(commodityId)}
+                new String[] {String.valueOf(commodity.getId())}
         );
+
+        if (result > 0) { //delete from repo as well as all prices associated
+            priceRecords.removeIf(p -> p.getCommodity().equals(commodity));
+            commodities.remove(commodity);
+        }
+
         return result > 0;
     }
 
