@@ -3,20 +3,26 @@ package com.example.openmarket;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.openmarket.db.Repository;
 import com.example.openmarket.model.Commodity;
 import com.example.openmarket.model.PriceRecord;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class CommodityAdapter extends RecyclerView.Adapter<CommodityAdapter.CommodityViewHolder> {
 
@@ -59,6 +65,43 @@ public class CommodityAdapter extends RecyclerView.Adapter<CommodityAdapter.Comm
             intent.putExtra("COMMODITY_NAME", data.getName());
             context.startActivity(intent);
         });
+
+        holder.itemView.setOnLongClickListener(e -> {
+            showPopUpMenu(e, position, data);
+            return true;
+        });
+    }
+
+    private void showPopUpMenu(View view, int position, CommodityDisplayData data) {
+        PopupMenu popupMenu = new PopupMenu(context, view);
+        MenuInflater menuInflater = popupMenu.getMenuInflater();
+
+        menuInflater.inflate(R.menu.commodity_item_menu, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(item -> onMenuItemClick(item, position, data));
+
+        popupMenu.show();
+    }
+
+    private boolean onMenuItemClick(MenuItem item, int position, CommodityDisplayData data) {
+        if (item.getItemId() == R.id.menu_delete) {
+            List<Commodity> commodities = Repository.getCommodities(context);
+            commodities = commodities.stream()
+                            .filter(c -> c.getName().equals(data.getName()))
+                                    .collect(Collectors.toList());
+            if (Repository.deleteCommodity(context, commodities.get(0))) {
+                Toast.makeText(context, "Successfully deleted commodity", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Commodity not found", Toast.LENGTH_LONG).show();
+            }
+
+            displayDataList.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, displayDataList.size());
+            return true;
+        }
+
+        return false;
     }
 
     @Override

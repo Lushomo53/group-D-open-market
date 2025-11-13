@@ -46,4 +46,18 @@
     <string name="no_data_available">No data available</string>
     <string name="select_a_commodity_to_view_price_trends">Select a commodity to view price trends</string>
     <string name="please_select_a_commodity">Please select a commodity\n</string>
+    <string name="group_d_student_list">Group D - Student List</string>
+    <string name="derrick_kalaba_202308406">Derrick Kalaba - 202308406</string>
+    <string name="elton_chiwala_202308647">Elton Chiwala - 202308647</string>
+    <string name="tachila_nyirenda_202307097">Tachila Nyirenda - 202307097</string>
+    <string name="lushomo_lungo_202304740">Lushomo Lungo - 202304740</string>
+    <string name="michael_lungu_202306929">Michael Lungu - 202306929</string>
+    <string name="cholwe_hamomba_202308970">Cholwe Hamomba - 202308970</string>
+    <string name="lombe_kufika_202302686">Lombe Kufika - 202302686</string>
+    <string name="themba_mkandawire_202308921">Themba Mkandawire - 202308921</string>
+    <string name="emmanuel_mwasile_chitundu_202304663">Emmanuel Mwasile Chitundu - 202304663</string>
+    <string name="hamusonde_muntanga_202307237">Hamusonde Muntanga - 202307237</string>
+    <string name="deborah_makulu_202306456">Deborah Makulu - 202306456</string>
+    <string name="chisala_mushili_202307626">Chisala Mushili - 202307626</string>
+    <string name="delete">Delete</string>
 </resources>

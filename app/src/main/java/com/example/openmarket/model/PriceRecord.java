@@ -3,7 +3,7 @@ package com.example.openmarket.model;
 import java.time.LocalDate;
 public class PriceRecord {
     private int id;
-    private final Commodity commodity;
+    private Commodity commodity;
      
     private final LocalDate lastUpdated;
     private final double price;
@@ -23,4 +23,9 @@ public class PriceRecord {
     public LocalDate getLastUpdated() { return lastUpdated; }
 
     public void setId(int id) { this.id = id; }
+
+    public void setCommodity(Commodity commodity) {
+        this.commodity = commodity;
+        setId(commodity.getId());
+    }
 }
