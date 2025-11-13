@@ -22,7 +22,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
-public class AddCommodityActivity extends AppCompatActivity {
+public class  AddCommodityActivity extends AppCompatActivity {
 
     private EditText editCommodityName;
     private Spinner spinnerUnit;
