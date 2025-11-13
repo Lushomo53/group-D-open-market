@@ -71,24 +71,49 @@ public class Repository {
         Repository repo = getInstance(context);
         boolean localDeleted = repo.deleteCommodityInternal(commodity);
 
-        // Remote deletion
+        // Remote delete
         repo.remoteRepo.api.deleteCommodity(commodity.getId())
                 .enqueue(new retrofit2.Callback<Void>() {
                     @Override
                     public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                         if (!response.isSuccessful()) {
-                            Log.e(TAG, "Failed to delete remote commodity: " + response.code());
+                            Log.e("RepoSync", "Failed to delete remote commodity: " + response.code());
                         }
                     }
-
                     @Override
                     public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                        Log.e(TAG, Objects.requireNonNull(t.getMessage()));
+                        Log.e("RepoSync", "Remote delete failed: " + Objects.requireNonNull(t.getMessage()));
                     }
                 });
 
         return localDeleted;
     }
+
+    public static boolean deletePrice(Context context, PriceRecord priceRecord) {
+        Repository repo = getInstance(context);
+        boolean localDeleted = repo.deletePriceInternal(priceRecord.getCommodity().getId(),
+                priceRecord.getLastUpdated().toString());
+
+        // Remote delete
+        repo.remoteRepo.api.deletePrice(priceRecord.getId())
+                .enqueue(new retrofit2.Callback<Void>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                        if (!response.isSuccessful()) {
+                            Log.e("RepoSync", "Failed to delete remote price: " + response.code());
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                        Log.e("RepoSync", "Remote delete failed: " + Objects.requireNonNull(t.getMessage()));
+                    }
+                });
+
+        return localDeleted;
+    }
+
+
+
 
     public static List<PriceRecord> getPricesForCommodity(Context context, Commodity commodity) {
         return getInstance(context).getPricesForCommodityInternal(commodity.getId());
@@ -102,11 +127,6 @@ public class Repository {
             @Override public void onSuccess() {}
             @Override public void onFailure(String error) { Log.e(TAG, error); }
         });
-    }
-
-    public static void deletePrice(Context context, Commodity commodity, String dateText) {
-        getInstance(context).deletePriceInternal(commodity.getId(), dateText);
-        // Implement remote deletion if PriceRecord IDs are available
     }
 
     /** ------------------- INTERNAL METHODS ------------------- **/

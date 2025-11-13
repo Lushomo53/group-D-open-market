@@ -25,9 +25,8 @@ public interface RetrofitInterface {
     @DELETE("commodities/{id}/")
     Call<Void> deleteCommodity(@Path("id") int commodityId);
 
-
     @DELETE("prices/{id}/")
-    Call<Void> deletePrice(@Body PriceRecord priceRecord);
+    Call<Void> deletePrice(@Path("id") int priceId);
 
     // Pass commodity ID as query parameter
     @GET("prices/")
